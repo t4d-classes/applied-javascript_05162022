@@ -9,12 +9,16 @@ const colorList = [
   { id: 3, name: "blue", hexcode: '0000ff' },
 ];
 
+const cars = [
+  { id: 1, make: 'Tesla', model: 'S', year: 2018, color: 'red', price: 120000 },
+  { id: 2, make: 'Ford', model: 'Fusion Hybrid', year: 2019, color: 'blue', price: 45000 }
+]
+
 const root = createRoot(document.querySelector('#root'));
 
-// root.render(React.createElement(ColorTool));
 root.render(
   <>
     <ColorTool colors={colorList} />
-    <CarTool />
+    <CarTool cars={cars} />
   </>
 );

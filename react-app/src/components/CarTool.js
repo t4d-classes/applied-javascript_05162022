@@ -1,9 +1,13 @@
-export const CarTool = () => {
+import { ToolHeader } from './ToolHeader';
+import { CarTable } from "./CarTable";
+
+export const CarTool = ({ cars }) => {
 
   return (
-    <header>
-      <h1>Car Tool</h1>
-    </header>
+    <>
+      <ToolHeader headerText="Car Tool" />
+      <CarTable cars={cars} />
+    </>
   );
 
 };
