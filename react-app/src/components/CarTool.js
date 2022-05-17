@@ -7,6 +7,8 @@ import { CarForm } from './CarForm';
 export const CarTool = ({ cars: initialCars }) => {
 
   const [ cars, setCars ] = useState([ ...initialCars ]);
+  
+  const [ editCarId, setEditCarId ] = useState(-1);
 
   const addCar = newCar => {
 
@@ -18,16 +20,33 @@ export const CarTool = ({ cars: initialCars }) => {
       },
     ]);
 
+    setEditCarId(-1);
+
   };
+
+  const cancelCar = () => setEditCarId(-1);
 
   const deleteCar = carId => {
     setCars(cars.filter(c => c.id !== carId));
+    setEditCarId(-1);
+  };
+
+  const editCar = carId => setEditCarId(carId);
+
+  const saveCar = car => {
+    const newCars = [...cars];
+    const carIndex = newCars.findIndex(c => c.id === car.id);
+    newCars[carIndex] = car;
+    setCars(newCars);
+    setEditCarId(-1);
   };
 
   return (
     <>
       <ToolHeader headerText="Car Tool" />
-      <CarTable cars={cars} onDeleteCar={deleteCar} />
+      <CarTable cars={cars} editCarId={editCarId}
+        onEditCar={editCar} onDeleteCar={deleteCar}
+        onSaveCar={saveCar} onCancelCar={cancelCar} />
       <CarForm buttonText="Add Car" onSubmitCar={addCar} />
     </>
   );
