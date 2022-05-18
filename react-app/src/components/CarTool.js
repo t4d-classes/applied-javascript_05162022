@@ -1,54 +1,45 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { ToolHeader } from './ToolHeader';
+import { useList } from "../hooks/useList";
+import { ToolHeader } from "./ToolHeader";
 import { CarTable } from "./CarTable";
-import { CarForm } from './CarForm';
+import { CarForm } from "./CarForm";
 
-export const CarTool = ({ cars: initialCars }) => {
+export function CarTool(props) {
 
-  const [ cars, setCars ] = useState([ ...initialCars ]);
-  
-  const [ editCarId, setEditCarId ] = useState(-1);
+  const [
+    cars, appendCar,
+    replaceCar, removeCar,
+  ] = useList([...props.cars]);
 
-  const addCar = newCar => {
+  const [editCarId, setEditCarId] = useState(-1);
 
-    setCars([
-      ...cars,
-      {
-        ...newCar,
-        id: Math.max(...cars.map(c => c.id), 0) + 1,
-      },
-    ]);
-
+  const addCar = car => {
+    appendCar(car);
     setEditCarId(-1);
+  };
 
+  const saveCar = car => {
+    replaceCar(car);
+    setEditCarId(-1);
+  }
+
+  const deleteCar = carId => {
+    removeCar(carId);
+    setEditCarId(-1);
   };
 
   const cancelCar = () => setEditCarId(-1);
 
-  const deleteCar = carId => {
-    setCars(cars.filter(c => c.id !== carId));
-    setEditCarId(-1);
-  };
-
-  const editCar = carId => setEditCarId(carId);
-
-  const saveCar = car => {
-    const newCars = [...cars];
-    const carIndex = newCars.findIndex(c => c.id === car.id);
-    newCars[carIndex] = car;
-    setCars(newCars);
-    setEditCarId(-1);
-  };
 
   return (
     <>
       <ToolHeader headerText="Car Tool" />
       <CarTable cars={cars} editCarId={editCarId}
-        onEditCar={editCar} onDeleteCar={deleteCar}
+        onEditCar={setEditCarId} onDeleteCar={deleteCar}
         onSaveCar={saveCar} onCancelCar={cancelCar} />
       <CarForm buttonText="Add Car" onSubmitCar={addCar} />
     </>
   );
 
-};
+}

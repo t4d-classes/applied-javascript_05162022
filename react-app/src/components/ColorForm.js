@@ -1,5 +1,6 @@
-import { useState } from 'react';
 import styled from 'styled-components';
+
+import { useForm } from '../hooks/useForm';
 
 const Label = styled.label`
   display: block;
@@ -7,19 +8,13 @@ const Label = styled.label`
 
 export const ColorForm = ({ buttonText, onSubmitColor }) => {
 
-  const [ colorForm, setColorForm ] = useState({
+  const [ colorForm, change, resetColorForm ] = useForm({
     name: '', hexcode: '',
   });
 
-  const change = (evt) => {
-    setColorForm({
-      ...colorForm,
-      [evt.target.name]: evt.target.value,
-    });
-  };
-
   const submitColor = () => {
     onSubmitColor({...colorForm });
+    resetColorForm();
   };
 
   return (

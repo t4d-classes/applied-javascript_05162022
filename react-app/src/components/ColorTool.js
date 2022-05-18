@@ -1,43 +1,34 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-
+import { useColorToolStore } from '../hooks/useColorToolStore';
 import { ToolHeader } from './ToolHeader';
 import { ColorList } from './ColorList';
 import { ColorForm } from './ColorForm';
 
-export const ColorTool = ({ colors: initialColors }) => {
 
-  const [ colors, setColors ] = useState([ ...initialColors ]);
+;
 
-  const addColor = newColor => {
+export function ColorTool(props) {
 
-    setColors([
-      ...colors,
-      {
-        ...newColor,
-        id: Math.max(...colors.map(c => c.id), 0) + 1,
-      },
-    ]);
+    // ... is the array spread operator used to copy items from
+    // props.colors into a new array that the component owns
+    // const store = useColorToolStore([...props.colors]);
 
-  };
+    const { 
+        colors, showHexcode, sortColorsAsc,
+        sortColorsDesc, toggleHexcode, appendColor,
+    } = useColorToolStore([...props.colors]);
 
-  return (
-    <>
-      <ToolHeader headerText="Color Tool" />
-      <ColorList colors={colors} />
-      <ColorForm buttonText="Add Color" onSubmitColor={addColor} />
-    </>
-  );
-};
 
-ColorTool.defaultProps = {
-  colors: [],
-};
+    return (
+        <>
+            <ToolHeader headerText='Color Tool' />
+            <ColorList colors={colors}
+                showHexcode={showHexcode}
+                onSortAsc={sortColorsAsc}
+                onSortDesc={sortColorsDesc}
+                onToggleHexcode={toggleHexcode} />
+            <ColorForm buttonText="Add Color"
+                onSubmitColor={appendColor} />
+        </>
+    );
 
-ColorTool.propTypes = {
-  colors: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    hexcode: PropTypes.string.isRequired,
-  })).isRequired,
-};
+}
