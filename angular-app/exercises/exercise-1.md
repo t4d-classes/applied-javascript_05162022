@@ -8,6 +8,6 @@ Example: ng g m color-tool
 
 Example: ng g c color-tool/components/color-home
 
-3. In the Car Home component, display a header with an h1 which is populated with a headerText property.
+3. In the Car Home component, display a header with an h1 and static text.
 
 4. Display the Car Home component beneath the Color Home component within App Component
