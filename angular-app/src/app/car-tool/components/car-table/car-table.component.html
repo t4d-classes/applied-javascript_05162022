@@ -1,12 +1,13 @@
 <table>
   <thead>
     <tr>
-      <th>id</th>
-      <th>make</th>
-      <th>model</th>
-      <th>year</th>
-      <th>color</th>
-      <th>price</th>
+      <th>Id</th>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Year</th>
+      <th>Color</th>
+      <th>Price</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -17,6 +18,11 @@
       <td>{{car.year}}</td>
       <td>{{car.color}}</td>
       <td>{{car.price}}</td>
+      <td>
+        <button (click)="deleteCar.emit(car.id)">
+          Delete
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
