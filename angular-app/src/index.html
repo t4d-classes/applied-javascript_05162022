@@ -10,7 +10,6 @@
 </head>
 <body>
   <app-root></app-root>
-
   <!-- <script>
 
     const outer = () => {
@@ -102,56 +101,55 @@
 
     // const delay = () => Math.floor(Math.random() * 1000) + 500;
 
-    // class Promise {
+    class Promise {
       
-    //   #resolveFns = [];
-    //   #rejectFns = [];
-    //   #value;
+      #resolveFns = [];
+      #rejectFns = [];
+      #value;
 
-    //   constructor(asyncFn) {
+      constructor(asyncFn) {
 
-    //     const resolveFn = (result) => {
-    //       this.#resolveFns.forEach(
-    //         ([ res, rej, fn ]) => {
-    //           this.#value = fn(result);
+        const resolveFn = (result) => {
+          this.#resolveFns.forEach(
+            ([ res, rej, fn ]) => {
+              this.#value = fn(result);
+              if (this.#value instanceof Promise) {
+                this.#value.then(g => res(g)).catch(g => rej(g));
+              } else {
+                res(this.#value);
+              }
+            });
+        };
 
-    //           if (this.#value instanceof Promise) {
-    //             this.#value.then(g => res(g)).catch(g => rej(g));
-    //           } else {
-    //             res(this.#value);
-    //           }
-    //         });
-    //     };
+        const rejectFn = (result) => {
+          this.#rejectFns.forEach(
+            ([ res, rej, fn ]) => {
+              this.#value = fn(result);
+              if (this.#value instanceof Promise) {
+                this.#value.then(g => res(g)).catch(g => rej(g));
+              } else {
+                res(this.#value);
+              }
+            });
+        }
 
-    //     const rejectFn = (result) => {
-    //       this.#rejectFns.forEach(
-    //         ([ res, rej, fn ]) => {
-    //           this.#value = fn(result);
-    //           if (this.#value instanceof Promise) {
-    //             this.#value.then(g => res(g)).catch(g => rej(g));
-    //           } else {
-    //             res(this.#value);
-    //           }
-    //         });
-    //     }
+        asyncFn(resolveFn, rejectFn);
+      }
 
-    //     asyncFn(resolveFn, rejectFn);
-    //   }
+      then(fn) {
+        return new Promise((resolve, reject) => {
+          this.#resolveFns.push([resolve, reject, fn]);
+          this.#rejectFns.push([resolve, reject, r => new Promise((_, rej) => rej(r))]);
+        });
+      }
 
-    //   then(fn) {
-    //     return new Promise((resolve, reject) => {
-    //       this.#rejectFns.push(fn);
-    //       this.#resolveFns.push([resolve, reject, fn]);
-    //     });
-    //   }
-
-    //   catch(fn) {
-    //     return new Promise((resolve, reject) => {
-    //       this.#resolveFns.push(fn);
-    //       this.#rejectFns.push([resolve, reject, fn]);
-    //     });
-    //   }
-    // }
+      catch(fn) {
+        return new Promise((resolve, reject) => {
+          this.#resolveFns.push([resolve, reject, r => new Promise((res) => res(r)) ]);
+          this.#rejectFns.push([resolve, reject, fn]);
+        });
+      }
+    }
 
     // const p = new Promise((resolve, reject) => {
 
@@ -207,20 +205,22 @@
 
 
   </script> -->
-  <script>
+  <!-- <script>
 
-    const xhr = new XMLHttpRequest();
+    const myFetch = url => {
+      return new Promise(resolve => {
+        const xhr = new XMLHttpRequest();
+        xhr.addEventListener('readystatechange', () => {
+          if (xhr.status === 200 && xhr.readyState === 4) {
+            resolve(JSON.parse(xhr.responseText));
+          }
+        });
 
-    xhr.addEventListener('readystatechange', () => {
+        xhr.open('GET', url);
+        xhr.send();        
+      });
+    };
 
-      if (xhr.status === 200 && xhr.readyState === 4) {
-        console.log(JSON.parse(xhr.responseText));
-      }
-
-    });
-
-    xhr.open('GET', 'http://localhost:3050/colors');
-    xhr.send();
 
     // Lab Exercise
 
@@ -231,8 +231,81 @@
     myFetch('http://localhost:3050/colors').then(colors => console.log(colors));
 
 
+  </script> -->
+  <!-- <script>
 
-  </script>
+    // const allColors = () => {
+    //   return fetch('http://localhost:3050/colors')
+    //     .then(res => res.json());
+    // };
+
+    const allColors = async () => {
+      const res = await fetch('http://localhost:3050/colors');
+      const colors = await res.json();
+      return colors;
+    };
+
+    const oneColor = async colorId => {
+      const res = await fetch(
+        `http://localhost:3050/colors/${encodeURIComponent(colorId)}`);
+      const color = await res.json();
+      return color;
+    }
+
+    const appendColor = async newColor => {
+      const res = await fetch('http://localhost:3050/colors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newColor),
+      });
+      const color = await res.json();
+      return color;
+    };
+
+    const replaceColor = async color => {
+      await fetch(
+        `http://localhost:3050/colors/${encodeURIComponent(color.id)}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(color),
+        });
+    };
+
+    const removeColor = async colorId => {
+      await fetch(
+        `http://localhost:3050/colors/${encodeURIComponent(colorId)}`,
+        { method: 'DELETE' });
+    };
+
+
+
+    // const appendAndRefresh = async (newColor) => {
+    //   await appendColor(newColor);
+    //   return allColors();
+    // };
+
+
+    // const appendAndRefresh = (newColor) =>
+    //   appendColor(newColor).then(allColors);
+
+    // appendAndRefresh({
+    //   name: 'purple', hexcode: '0000ff'
+    // }).then(colors => console.log(colors));
+
+
+    const getColors = async colorIds => {
+
+      const colors = await Promise.all(
+        colorIds.map(colorId => oneColor(colorId)));
+
+      return colors;
+
+    };
+
+    getColors([1,2]).then(colors => console.log(colors));
+
+  </script> -->
 </body>
 
 </html>

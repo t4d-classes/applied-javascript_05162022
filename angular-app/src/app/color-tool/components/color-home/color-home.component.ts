@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { switchMap } from 'rxjs';
 
 import { Color, NewColor } from '../../models/colors';
+import { ColorsDataService } from '../../services/colors-data.service';
 
 @Component({
   selector: 'app-color-home',
@@ -11,25 +13,27 @@ export class ColorHomeComponent implements OnInit {
 
   headerText = "Color Tool";
 
-  colors: Color[] = [
-    { id: 1, name: 'red', hexcode: 'ff0000' },
-    { id: 2, name: 'green', hexcode: '00ff00' },
-    { id: 3, name: 'blue', hexcode: '0000ff' },
-  ];
+  colors: Color[] = [];
 
-  constructor() { }
+  constructor(private colorsData: ColorsDataService) { }
 
   ngOnInit(): void {
+    this.colorsData.all().subscribe({
+      next: colors => {
+        this.colors = colors;
+      },
+    });
   }
 
   addColor(color: NewColor) {
-    this.colors = [
-      ...this.colors,
-      {
-        ...color,
-        id: Math.max(...this.colors.map(c => c.id), 0) + 1,
-      }
-    ];
+    this.colorsData
+      .append(color)
+      .pipe(
+        switchMap(() => this.colorsData.all())
+      )
+      .subscribe({
+        next: colors => this.colors = colors,
+      });
   }
 
 }
