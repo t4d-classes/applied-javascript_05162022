@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -9,5 +10,80 @@
 </head>
 <body>
   <app-root></app-root>
+
+  <!-- <script>
+
+    const outer = () => {
+
+      let t = 2;
+
+      setTimeout(function timeout1() {
+        t = 4;
+        console.log(t);
+      }, 2000);
+
+      return function insideTheOuter() {
+        console.log(t);
+      };
+    };
+
+    const inner = outer();
+
+    inner();
+
+    setTimeout(function timeout2() {
+      inner();
+      console.log(t);
+    }, 4000);
+
+    // console.dir(inner);
+
+
+  </script> -->
+  <script>
+
+    // setTimeout(() => {
+    //   console.log('hello');
+    // }, 0);
+    // console.log('goodbye');
+
+    const delay = () => Math.floor(Math.random() * 1000) + 500;
+
+    // setTimeout(() => {
+    //     console.log('a');
+    //     setTimeout(() => {
+    //         console.log('b');
+    //         setTimeout(() => {
+    //             console.log('c');
+    //         }, delay());
+    //     }, delay());
+    // }, delay());
+
+    function allDone() {
+      console.log('all done');
+    }
+
+    setTimeout(() => {
+      console.log('a');
+    }, delay());
+
+    setTimeout(() => {
+      console.log('b');
+    }, delay());
+
+    setTimeout(() => {
+      console.log('c');
+    }, delay());
+
+    // Run the allDone function after all three callbacks have been invoked.
+    // 1. Do not hardcode any kind of delay values
+    // 2. All three calls to setTimeout must be in the same task
+    // 3. Do not use promises
+
+
+
+
+  </script>
 </body>
+
 </html>

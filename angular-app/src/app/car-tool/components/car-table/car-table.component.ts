@@ -20,4 +20,8 @@ export class CarTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  doDeleteCar(carId: number) {
+    this.deleteCar.emit(carId);
+  }
+
 }
