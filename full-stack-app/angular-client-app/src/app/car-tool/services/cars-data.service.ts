@@ -11,18 +11,18 @@ export class CarsDataService {
 
   all() {
     return this.http
-      .get<Car[]>('http://localhost:3050/cars');
+      .get<Car[]>('http://localhost:8040/cars');
   }
 
   append(newCar: NewCar) {
     return this.http
-      .post<Car>('http://localhost:3050/cars', newCar);
+      .post<Car>('http://localhost:8040/cars', newCar);
   }
 
   replace(car: Car) {
     return this.http
       .put<void>(
-        `http://localhost:3050/cars/${encodeURIComponent(car.id)}`,
+        `http://localhost:8040/cars/${encodeURIComponent(car.id)}`,
         car,
       );
   }
@@ -30,6 +30,6 @@ export class CarsDataService {
   remove(carId: number) {
     return this.http
       .delete<void>(
-        `http://localhost:3050/cars/${encodeURIComponent(carId)}`);
+        `http://localhost:8040/cars/${encodeURIComponent(carId)}`);
   }
 }
