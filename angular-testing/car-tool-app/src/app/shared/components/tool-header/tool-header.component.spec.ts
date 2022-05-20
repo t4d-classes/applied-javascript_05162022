@@ -33,13 +33,13 @@ describe('ToolHeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should populate h1', () => {
+  it('should populate header', () => {
     
     // the native element is available on the fixture
-    const h1Element = fixture.nativeElement as HTMLHeadingElement;
+    const headerElement = fixture.nativeElement as HTMLHeadingElement;
 
     // the toBe matcher performs a shallow strict equality comparison
-    expect(h1Element.textContent).toBe(headerText);
+    expect(headerElement.textContent).toBe(headerText);
   });
 
 });
