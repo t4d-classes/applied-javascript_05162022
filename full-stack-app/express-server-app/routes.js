@@ -110,6 +110,8 @@ export const createAPI = (resourceName, Model) => {
           }
         );
       });      
-    })
+    });
+
+  return router;
 
 };
