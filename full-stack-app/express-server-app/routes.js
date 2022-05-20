@@ -65,9 +65,7 @@ export const createAPI = (resourceName, Model) => {
           return;
         }
 
-        const oldResource = {
-          ...resource,
-        };
+        const oldResource = resource.toObject();
 
         const updatedCar = { ...req.body };
         delete updatedCar.id;
@@ -83,7 +81,7 @@ export const createAPI = (resourceName, Model) => {
               return;
             }
             
-            res.json(oldResource.toObject());
+            res.json(oldResource);
           }
         );
       });      
