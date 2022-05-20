@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import { createAPI } from './routes.js';
+
 mongoose.connect('mongodb://mongo:27017', {
   user: 'root',
   pass: 'dbpass',
@@ -41,7 +43,7 @@ const port = 80;
 app.use(cors());
 app.use(express.json());
 
-
+app.use(createAPI('cars', Car));
 
 app.listen(port, () => {
   console.log('express app listening on port: ', port);

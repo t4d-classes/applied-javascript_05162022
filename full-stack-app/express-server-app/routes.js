@@ -57,7 +57,6 @@ export const createAPI = (resourceName, Model) => {
 
     })
     .put((req, res) => {
-
       Model.findOne({ _id: req.params.resourceId }, (err, resource) => {
 
         if (err) {
@@ -85,6 +84,29 @@ export const createAPI = (resourceName, Model) => {
             }
             
             res.json(oldResource.toObject());
+          }
+        );
+      });      
+    })
+    .delete((req, res) => {
+      Model.findOne({ _id: req.params.resourceId }, (err, resource) => {
+
+        if (err) {
+          console.log(err);
+          res.sendStatus(500);
+          return;
+        }
+
+        Model.deleteOne(
+          { _id: req.params.resourceId }, err => {
+
+            if (err) {
+              console.log(err);
+              res.sendStatus(500);
+              return;
+            }
+            
+            res.json(resource.toObject());
           }
         );
       });      
