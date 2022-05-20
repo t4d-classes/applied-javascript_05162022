@@ -30,6 +30,7 @@ export class CarFormComponent implements OnInit {
   }
 
   doSubmitCar() {
+    console.log(this.carForm.value);
     this.submitCar.emit(this.carForm.value);
   }
 

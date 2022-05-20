@@ -10,18 +10,42 @@ import { Car } from '../../models/cars';
 export class CarTableComponent implements OnInit {
 
   @Input()
-  cars: Car[] = [];
+  cars: Car[] | null = [];
+
+  @Input()
+  editCarId: number | null = -1;
+
+  @Output()
+  editCar = new EventEmitter<number>();
 
   @Output()
   deleteCar = new EventEmitter<number>();
 
+  @Output()
+  saveCar = new EventEmitter<Car>();
+
+  @Output()
+  cancelCar = new EventEmitter<void>();
+
+
   constructor() { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+  }
+
+  doEditCar(carId: number) {
+    this.editCar.emit(carId);
   }
 
   doDeleteCar(carId: number) {
     this.deleteCar.emit(carId);
   }
 
+  doSaveCar(car: Car) {
+    this.saveCar.emit(car);
+  }
+
+  doCancelCar() {
+    this.cancelCar.emit();
+  }
 }

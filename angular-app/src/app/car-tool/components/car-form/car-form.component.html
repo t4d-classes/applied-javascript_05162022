@@ -1,23 +1,23 @@
 <form [formGroup]="carForm">
   <label>
     Make:
-    <input type="text" fromControlName="make">
+    <input type="text" formControlName="make">
   </label>
   <label>
     Model:
-    <input type="text" fromControlName="model">
+    <input type="text" formControlName="model">
   </label>
   <label>
     Year:
-    <input type="number" fromControlName="year">
+    <input type="number" formControlName="year">
   </label>
   <label>
     Color:
-    <input type="text" fromControlName="color">
+    <input type="text" formControlName="color">
   </label>
   <label>
     Price:
-    <input type="number" fromControlName="price">
+    <input type="number" formControlName="price">
   </label>
   <button type="button" (click)="doSubmitCar()">
     {{buttonText}}

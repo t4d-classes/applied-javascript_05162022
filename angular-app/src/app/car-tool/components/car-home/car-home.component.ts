@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { switchMap } from 'rxjs';
 
 import { Car, NewCar } from '../../models/cars';
+import { CarsDataService } from '../../services/cars-data.service';
 
 @Component({
   selector: 'app-car-home',
@@ -9,34 +11,57 @@ import { Car, NewCar } from '../../models/cars';
 })
 export class CarHomeComponent implements OnInit {
 
-  cars: Car[] = [
-    {
-      id: 1, make: 'Tesla', model: 'S',
-      year: 2022, color:'red', price: 120000,
-    },
-    {
-      id: 1, make: 'Ford', model: 'Fusion Hybrid',
-      year: 2021, color:'blue', price: 45000,
-    },
-  ];
+  cars: Car[] = [];
 
-  constructor() { }
+  editCarId = -1;
+
+  constructor(private carsData: CarsDataService) { }
 
   ngOnInit(): void {
+    this.carsData.all().subscribe({
+      next: cars => this.cars = cars,
+    });
+  }
+
+  editCar(carId: number) {
+    this.editCarId = carId;
+  }
+
+  cancelCar() {
+    this.editCarId = -1;
   }
 
   addCar(car: NewCar) {
-    this.cars = [
-      ...this.cars,
-      {
-        ...car,
-        id: Math.max(...this.cars.map(c => c.id), 0) + 1,
-      }
-    ];
+    this.carsData.append(car)
+      .pipe(
+        switchMap(() => this.carsData.all())
+      )
+      .subscribe({
+        next: cars => this.cars = cars,
+      })
+    this.editCarId = -1;
+  }
+
+  saveCar(car: Car) {
+    this.carsData.replace(car)
+      .pipe(
+        switchMap(() => this.carsData.all())
+      )
+      .subscribe({
+        next: cars => this.cars = cars,
+      });
+    this.editCarId = -1;
   }
 
   deleteCar(carId: number) {
-    this.cars = this.cars.filter(c => c.id !== carId);
+    this.carsData.remove(carId)
+      .pipe(
+        switchMap(() => this.carsData.all())
+      )
+      .subscribe({
+        next: cars => this.cars = cars,
+      });
+    this.editCarId = -1;
   }
 
 }
